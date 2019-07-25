@@ -429,7 +429,7 @@ input#newFilter:focus,input#newWhitelistDomain:focus{
     background: #777777 !important;
     z-index: 0;
     text-decoration: none;
-    font-size: 1.5em !important;
+    font-size: 1.4em !important;
     font-weight: bold;
     width: 280px;
     border: none !important;

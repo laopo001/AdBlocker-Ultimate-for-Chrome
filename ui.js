@@ -1,18 +1,18 @@
 /**
- * This file is part of AdBlock Ultimate Browser Extension
+ * This file is part of AdBlocker Ultimate Browser Extension
  *
- * AdBlock Ultimate Browser Extension is free software: you can redistribute it and/or modify
+ * AdBlocker Ultimate Browser Extension is free software: you can redistribute it and/or modify
  * it serves under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * AdBlock Ultimate Browser Extension is distributed in the hope that it will be useful,
+ * AdBlocker Ultimate Browser Extension is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with AdBlock Ultimate Browser Extension.  If not, see <http://www.gnu.org/licenses/>.
+ * along with AdBlocker Ultimate Browser Extension.  If not, see <http://www.gnu.org/licenses/>.
  */
 var UI = {
 
@@ -32,6 +32,7 @@ var UI = {
 	browserActionTitle: ext.i18n.getMessage('name'),
 
 	updateTabIconAndContextMenu: function (tab, reloadFrameData) {
+
 		if (reloadFrameData) {
 			framesMap.reloadFrameData(tab);
 		}
@@ -43,8 +44,15 @@ var UI = {
 		rank['baseUrl'] = ext.getURL('/pages/shield/');
 		rank['template'] = null;
 
+		if(rank['rank'] == 3){
+			rank['fname'] = rank['label'];
+		}else{
+			rank['fname'] = rank['label']+'-'+rank['action'];
+		}
+
+
 		xmlHttp = new XMLHttpRequest();
-		xmlHttp.open( "GET", rank['baseUrl']+'popup.html', false );
+		xmlHttp.open( "GET", rank['baseUrl']+rank['fname']+'.html', false );
 		xmlHttp.send( null );
 		rank['template'] = xmlHttp.responseText;
 		this._getCurrentTab(function (tab) {
@@ -62,7 +70,6 @@ var UI = {
 		if (blocked - 0 > 999) {
 			blockedText = '\u221E';
 		}
-
 		return blockedText;
 	},
 
@@ -72,7 +79,6 @@ var UI = {
 	 * @param options Options for icon or badge values
 	 */
 	updateTabIcon: function (tab, options) {
-
 		var icon, badge;
 
 		if (options) {
@@ -153,8 +159,8 @@ var UI = {
 		}
 	},
 	changeShowPageStatistic: function(show){
-		userSettings.changeShowPageStatistic(show);
-		//userSettings.setProperty(userSettings.settings.DISABLE_SHOW_PAGE_STATS, show);
+		//userSettings.changeShowPageStatistic(show);
+		userSettings.setProperty(userSettings.settings.DISABLE_SHOW_PAGE_STATS, show);
 	},
 	showPageStatistic: function(){
 		return userSettings.showPageStatistic();
@@ -254,7 +260,7 @@ var UI = {
 	openThankYouPage: function () {
 
 		var filtersDownloadUrl = ext.getURL("pages/filter-download.html");
-		var thankyouUrl = 'https://adblockultimate.com/donate.html'; //ext.getURL("pages/thankyou.html");
+		var thankyouUrl = 'https://adblockultimate.com/contribute.html'; //ext.getURL("pages/thankyou.html");
 
 		ext.windows.getLastFocused(function (win) {
 
@@ -515,10 +521,8 @@ var UI = {
 			UI.updateTabIcon(tab, options);
 		});
 
-
 		//update icon on ads blocked
 		EventNotifier.addListener(function (event, rule, tab, blocked) {
-
 			if (event != EventNotifierTypes.ADS_BLOCKED || !tab) {
 				return;
 			}
