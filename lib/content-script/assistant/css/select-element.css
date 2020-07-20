@@ -24,3 +24,7 @@
     padding: 2px 0px 2px 5px !important;
     overflow: hidden !important;
 }
+
+#abu-assistant-dialog{
+    z-index: 99999999999;
+}
